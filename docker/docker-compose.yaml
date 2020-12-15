@@ -1,15 +1,15 @@
 version: '3.3'
 
 services:
-   wordpress:
+   wordpress-dev:
      depends_on:
        - db
        - memcached
      image: quay.io/presslabs/wordpress-runtime:bedrock
      volumes:
-       - ./:/app
+       - ../:/app
      ports:
-       - "8080:8080"
+       - 8080:8080
      restart: always
      environment:
        DB_HOST: db:3306
@@ -20,6 +20,25 @@ services:
        WP_HOME: http://localhost:8080
        WP_SITEURL: http://localhost:8080/wp
        WP_ENV: development
+
+   # wordpress:
+   #   depends_on:
+   #     - db
+   #     - memcached
+   #   container_name: ${NAME}
+   #   image: ${IMAGE}:latest
+   #   ports:
+   #     - 8080:8080
+   #   restart: always
+   #   environment:
+   #     DB_HOST: db:3306
+   #     DB_USER: wordpress
+   #     DB_PASSWORD: not-so-secure
+   #     DB_NAME: wordpress
+   #     MEMCACHED_HOST: memcached:11211
+   #     WP_HOME: http://localhost:8080
+   #     WP_SITEURL: http://localhost:8080/wp
+   #     WP_ENV: development
 
    db:
      image: percona:5.7
