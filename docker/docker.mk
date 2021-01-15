@@ -15,6 +15,7 @@
 MAJOR := $(shell echo $(VERSION) | cut -d. -f1)
 MINOR := $(shell echo $(VERSION) | cut -d. -f2)
 PATCH := $(shell echo $(VERSION) | cut -d. -f3)
+SSH_COMMAND := /bin/sh
 
 .EXPORT_ALL_VARIABLES:
 
@@ -48,9 +49,9 @@ push:
 ssh:
 	@$(MAKE) -s +ssh
 +ssh:
-	@docker ps | grep -E "$(NAME)$$" >/dev/null 2>&1 && \
-		docker exec -it $(NAME) /bin/sh|| \
-		docker run --rm -it --entrypoint /bin/sh $(IMAGE):latest
+	@docker ps | grep -E "$(NAME)_1$$" >/dev/null 2>&1 && \
+		docker-compose exec $(NAME) $(SSH_COMMAND)|| \
+		docker run --rm -it --entrypoint $(SSH_COMMAND) $(IMAGE):latest
 
 .PHONY: logs
 logs:
@@ -69,6 +70,6 @@ stop:
 .PHONY: clean
 clean:
 	-@docker-compose -f docker-compose.yaml kill
-	-@docker-compose -f docker-compose.yaml down
+	-@docker-compose -f docker-compose.yaml down -v --remove-orphans
 	-@docker-compose -f docker-compose.yaml rm -v
 	-@docker volume ls --format "{{.Name}}" | grep -E "$(NAME)$$" | xargs docker volume rm $(NOFAIL)

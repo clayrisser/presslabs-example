@@ -5,5 +5,7 @@ IMAGE := $(REGISTRY)/$(NAME)
 
 include docker.mk
 
+SSH_COMMAND := /bin/bash
+
 %:
 	@

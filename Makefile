@@ -10,10 +10,11 @@ start: install docker-up
 docker-%:
 	@$(MAKE) -s -C docker $(shell echo $@ | sed "s/docker-//")
 
-.PHONY: build start
+.PHONY: build start ssh
 build: docker-build
 pull: docker-pull
 push: docker-push
+ssh: docker-ssh
 
 .PHONY: clean
 clean: docker-clean
