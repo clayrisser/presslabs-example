@@ -11,7 +11,7 @@ Config::define('WP_DEBUG_DISPLAY', true);
 Config::define('WP_DISABLE_FATAL_ERROR_HANDLER', true);
 Config::define('SCRIPT_DEBUG', true);
 
-ini_set('display_errors', '1');
+Config::define('DISALLOW_FILE_MODS', strtolower(getenv('DISALLOW_FILE_MODS', '')) == 'true');
+Config::define('WP_DEBUG', strtolower(getenv('WP_DEBUG', '')) != 'false');
 
-// Enable plugin and theme updates and installation from the admin
-Config::define('DISALLOW_FILE_MODS', false);
+ini_set('display_errors', '1');
