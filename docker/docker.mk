@@ -66,10 +66,3 @@ up:
 .PHONY: stop
 stop:
 	@docker-compose stop $(ARGS)
-
-.PHONY: clean
-clean:
-	-@docker-compose -f docker-compose.yaml kill
-	-@docker-compose -f docker-compose.yaml down -v --remove-orphans
-	-@docker-compose -f docker-compose.yaml rm -v
-	-@docker volume ls --format "{{.Name}}" | grep -E "$(NAME)$$" | xargs docker volume rm $(NOFAIL)

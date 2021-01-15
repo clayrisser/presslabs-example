@@ -5,13 +5,13 @@ services:
     extends:
       file: docker-compose-base.yaml
       service: wordpress
-    container_name: ${NAME}
-    image: ${IMAGE}:latest
     depends_on:
       - db
       - memcached
+    volumes:
+      - ../:/app
     environment:
-      WP_ENV: production
+      WP_ENV: development
 
   db:
     extends:

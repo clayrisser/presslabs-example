@@ -1,0 +1,48 @@
+version: '2'
+
+services:
+  wordpress:
+    image: quay.io/presslabs/wordpress-runtime:bedrock
+    ports:
+      - 8080:8080
+    restart: always
+    entrypoint: sh
+    command:
+      - -c
+      - |
+          install_wordpress() {
+            while [ 1 ]; do
+              wp core install --url="$$WP_HOME" --title="$$WORDPRESS_BOOTSTRAP_TITLE" --admin_user="$$WORDPRESS_BOOTSTRAP_USER" --admin_email="$$WORDPRESS_BOOTSTRAP_EMAIL" --admin_password="$$WORDPRESS_BOOTSTRAP_PASSWORD"
+              test $$? -eq 0 && break
+              sleep 5
+            done
+          }
+          install_wordpress &
+          /usr/local/docker/bin/docker-entrypoint supervisord -c /usr/local/docker/etc/supervisor.conf
+    environment:
+      DB_HOST: db:3306
+      DB_NAME: wordpress
+      DB_PASSWORD: not-so-secure
+      DB_USER: wordpress
+      MEMCACHED_HOST: memcached:11211
+      WORDPRESS_BOOTSTRAP_EMAIL: email@example.com
+      WORDPRESS_BOOTSTRAP_PASSWORD: pass
+      WORDPRESS_BOOTSTRAP_TITLE: ${NAME}
+      WORDPRESS_BOOTSTRAP_USER: admin
+      WP_ENV: development
+      WP_HOME: http://localhost:8080
+      WP_SITEURL: http://localhost:8080/wp
+
+  db:
+    image: percona:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: not-so-secure
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: not-so-secure
+
+  memcached:
+    image: memcached:1.5

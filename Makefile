@@ -5,7 +5,7 @@ all: build
 install:
 	@composer install
 
-start: install docker-up
+start: install docker-start
 
 docker-%:
 	@$(MAKE) -s -C docker $(shell echo $@ | sed "s/docker-//")
@@ -15,6 +15,7 @@ build: docker-build
 pull: docker-pull
 push: docker-push
 ssh: docker-ssh
+up: docker-up
 
 .PHONY: clean
 clean: docker-clean
